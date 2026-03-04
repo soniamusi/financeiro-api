@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const { open } = require("sqlite");
 const sqlite3 = require("sqlite3");
+const path = require("path");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -43,9 +44,9 @@ const verificarToken = (req, res, next) => {
 
 // Na inicialização do banco:
 (async () => {
- db = await open({
-  filename: path.join(__dirname, "database.db"), 
-  driver: sqlite3.Database,
+  db = await open({
+    filename: path.join(__dirname, "database.db"),
+    driver: sqlite3.Database,
   });
 
   // Cria a tabela se ela não existir
