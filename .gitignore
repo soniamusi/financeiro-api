@@ -1,0 +1,18 @@
+# Bibliotecas 
+node_modules/
+
+# Base de dados local SQLite
+database.db
+database.db-journal
+
+# Ficheiros de ambiente 
+.env
+
+# Logs de erros
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ficheiros do sistema
+.DS_Store
+Thumbs.db
