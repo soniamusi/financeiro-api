@@ -7,7 +7,7 @@ const path = require("path");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = "aYDK6JltL7yjIoUys4Qd4CeqfNAzj7ff9gVL63Oaafl"; // Pode ser qualquer frase
+const JWT_SECRET = "aYDK6JltL7yjIoUys4Qd4CeqfNAzj7ff9gVL63Oaafl";
 const app = express();
 
 //Configurações (Middlewares Globais)
@@ -25,10 +25,10 @@ let db;
 // Middleware para verificar se o usuário está logado
 const verificarToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1]; // Pega apenas o código após "Bearer"
+  const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
-    console.log("Tentativa de acesso sem token!"); // ADICIONE ISSO
+    console.log("Tentativa de acesso sem token!");
     return res.status(401).json({ erro: "Acesso negado." });
   }
 
@@ -37,7 +37,7 @@ const verificarToken = (req, res, next) => {
     req.usuario = verificado;
     next();
   } catch (err) {
-    console.log("Token inválido ou expirado!"); // ADICIONE ISSO
+    console.log("Token inválido ou expirado!");
     res.status(403).json({ erro: "Token inválido." });
   }
 };
@@ -86,7 +86,7 @@ app.get("/api/despesas", verificarToken, async (req, res) => {
 // Salvar a despesa vinculada ao ID do usuário
 app.post("/api/despesas", verificarToken, async (req, res) => {
   const { descricao, valor, categoria, data } = req.body;
-  const usuario_id = req.usuario.id; // Pegamos o ID do token verificado
+  const usuario_id = req.usuario.id; 
 
   await db.run(
     "INSERT INTO despesas (descricao, valor, categoria, data, usuario_id) VALUES (?, ?, ?, ?, ?)",
@@ -97,13 +97,13 @@ app.post("/api/despesas", verificarToken, async (req, res) => {
 
 // Rota para Deletar
 app.delete("/api/despesas/:id", verificarToken, async (req, res) => {
-  console.log("Rota de DELETE acessada!"); // Adicione este log bem no início
+  console.log("Rota de DELETE acessada!");
   const { id } = req.params;
   const usuario_id = req.usuario.id; // ID vindo do Token
   console.log(`Tentando excluir despesa ID: ${id} do usuário: ${usuario_id}`);
 
   try {
-    // SEGURANÇA: Deleta apenas se o ID da despesa E o ID do usuário foram encontrados juntos
+    // Deleta apenas se o ID da despesa E o ID do usuário foram encontrados juntos
     const resultado = await db.run(
       "DELETE FROM despesas WHERE id = ? AND usuario_id = ?",
       [id, usuario_id],
@@ -132,7 +132,7 @@ app.put("/api/despesas/:id", verificarToken, async (req, res) => {
   const usuario_id = req.usuario.id; // Pegamos o ID de quem está logado
 
   try {
-    // Só edita se o ID da despesa pertencer ao USUÁRIO logado
+    //se o ID da despesa pertencer ao USUÁRIO logado
     const resultado = await db.run(
       "UPDATE despesas SET descricao = ?, valor = ?, categoria = ?, data = ? WHERE id = ? AND usuario_id = ?",
       [descricao, valor, categoria, data, id, usuario_id],
@@ -208,11 +208,6 @@ app.post("/api/auth/login", async (req, res) => {
     res.status(500).json({ erro: "Erro ao fazer login" });
   }
 });
-
-/*
-app.listen(3001, () =>
-  console.log("Servidor rodando em http://localhost:3001"),
-);*/
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, "0.0.0.0", () => {
